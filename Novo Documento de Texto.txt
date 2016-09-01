@@ -1,0 +1,5 @@
+<html>
+<body>
+<iframe src=”https://embed.waze.com/iframe?zoom=16&lat=-19.91469&lon=-43.93709” width=”900” height=”765“></iframe>
+</body>
+</html>
