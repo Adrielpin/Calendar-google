@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anexar documentos</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+    <style>
+    
+    #Sucesso{
+      margin: 0 auto 0 auto;
+    }
+    
+    img{
+      margin: 0 auto 0 auto;
+      border-radius:50%;
+      border:3px solid #000;
+      z-index:1;
+      width:250px;
+      height: 250px;
+    }
+
+</style>
+  </head>
+  <body>
+
+    <!-- Written by Amit Agarwal amit@labnol.org --> 
+    
+    <form class="main" id="form" novalidate="novalidate" style="max-width: 400px;margin: 40px auto;">
+      <div id="forminner">
+      <div class="row">
+        <div class="col s12">
+          <h5 class="center-align teal-text">Envio de arquivos para google drive</h5>
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="Nome" type="text" name="Nome" class="validate" required="" aria-required="true">
+          <label for="Nome">Nome</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="email" type="email" name="Email" class="validate" required="" aria-required="true">
+          <label for="email">Email</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="file-field input-field col s12">
+          <div class="btn">
+            <span>Arquivos</span>
+            <input id='files' type="file">
+          </div>
+          <div class="file-path-wrapper">
+            <input class="file-path validate" type="text" placeholder="Selecione o arquivo no seu computador">
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s6">
+          <button class="waves-effect waves-light btn submit-btn" type="submit" onclick="submitForm(); return false;">Enviar</button>
+        </div>   
+      </div>
+      <div class="row">
+        <div class="input-field col s12" id = "progress">
+        </div>
+      </div>
+      </div>
+      <div id="Sucesso" style="display:none">
+         <img src='https://i.kinja-img.com/gawker-media/image/upload/s--UlKSTLx5--/c_scale,fl_progressive,q_80,w_800/dzkiask2ymatavbgojrh.jpg'>         
+         <p>Seu arquivo foi enviado ao Google Drive.</p>
+         <p><iframe width='500' height='281' src='http://nobre.com.br/' frameborder='0' allowfullscreen></iframe></p>
+      </div>
+
+    </form>
+    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+      <a href="http://nobre.com.br"><i class="material-icons">live_help</i></a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+
+    <script>
+
+      var file, 
+          reader = new FileReader();
+
+      reader.onloadend = function(e) {
+        if (e.target.error != null) {
+          showError(" " + file.name + " Não foi possível ler o arquivo.");
+          return;
+        } else {
+          google.script.run
+            .withSuccessHandler(showSuccess)
+            .uploadFileToGoogleDrive(e.target.result, file.name, $('#name').val(), $('#email').val());
+        }
+      };
+      
+      function showSuccess(e) {
+        if (e === "OK") { 
+          $('#forminner').hide();
+          $('#Sucesso').show();
+        } else {
+          showError(e);
+        }
+      }
+
+      function submitForm() {
+
+        var files = $('#files')[0].files;
+
+        if (files.length === 0) {
+          showError("Please select a file to upload");
+          return;
+        }
+        
+        file = files[0];
+
+        showMessage("Uploading file..");
+
+        reader.readAsDataURL(file);
+      }
+      
+      function showError(e) {
+        $('#progress').addClass('red-text').html(e);
+      }
+
+      function showMessage(e) {
+        $('#progress').removeClass('red-text').html(e);
+      }
+
+
+    </script>
+
+  </body>
+
+</html>
